@@ -520,17 +520,3 @@ void CanAnalyzerResults::DisplayStringFromData(U64 frame, DisplayBase display_ba
 	strncpy(output, ss.str().c_str(), result_string_max_length-1);
 	output[result_string_max_length - 1] = '\0';
 }
-
-/*
-void CanAnalyzerResults::ParseStringFromData(U64 frame,
-	DisplayBase display_base,
-	char* deviceType,
-	char* manufacturer,
-	char* apiClass,
-	char* apiIndex,
-	char* deviceNumber,
-	U32 result_string_max_length)
-{
-
-}
-*/

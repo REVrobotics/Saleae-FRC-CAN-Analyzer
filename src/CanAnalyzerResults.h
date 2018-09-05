@@ -46,16 +46,6 @@ public:
 
 protected: //functions
 	void DisplayStringFromData(U64 frame, DisplayBase display_base, char* str, U32 result_string_max_length);
-	/*
-	void ParseStringFromData(U64 frame,
-		DisplayBase display_base, 
-		char* deviceType, 
-		char* manufacturer,
-		char* apiClass,
-		char* apiIndex,
-		char* deviceNumber,
-		U32 result_string_max_length);
-	*/
 	void GetDeviceTypeString(U64 frame, char* output, U32 result_string_max_length);
 	void GetManufacturerString(U64 frame, char* output, U32 result_string_max_length);
 	void GetAPIClassString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length);
