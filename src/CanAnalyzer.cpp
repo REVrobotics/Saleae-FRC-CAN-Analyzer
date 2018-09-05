@@ -537,12 +537,12 @@ U32 CanAnalyzer::GetMinimumSampleRateHz()
 
 const char* CanAnalyzer::GetAnalyzerName() const
 {
-	return "CAN";
+	return "FRC CAN";
 }
 
 const char* GetAnalyzerName()
 {
-	return "CAN";
+	return "FRC CAN";
 }
 
 Analyzer* CreateAnalyzer()

@@ -22,6 +22,7 @@ public:
 	Channel mCanChannel;
 	U32 mBitRate;
 	bool mInverted;
+	bool mIsFRC;
 
 	BitState Recessive();
 	BitState Dominant();
@@ -30,6 +31,7 @@ protected:
 	std::auto_ptr< AnalyzerSettingInterfaceChannel > mCanChannelInterface;
 	std::auto_ptr< AnalyzerSettingInterfaceInteger > mBitRateInterface;
 	std::auto_ptr< AnalyzerSettingInterfaceBool > mCanChannelInvertedInterface;
+	std::auto_ptr< AnalyzerSettingInterfaceBool > mIsFRCInterface;
 
 };
 #endif //CAN_ANALYZER_SETTINGS

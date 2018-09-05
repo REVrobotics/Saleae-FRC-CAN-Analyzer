@@ -7,7 +7,8 @@
 CanAnalyzerSettings::CanAnalyzerSettings()
 :	mCanChannel ( UNDEFINED_CHANNEL ),
 	mBitRate ( 1000000 ),
-	mInverted( false )
+	mInverted( false ),
+	mIsFRC( false )
 {
 	mCanChannelInterface.reset( new AnalyzerSettingInterfaceChannel() );
 	mCanChannelInterface->SetTitleAndTooltip( "CAN", "Controller Area Network - Input" );
@@ -23,10 +24,15 @@ CanAnalyzerSettings::CanAnalyzerSettings()
 	mCanChannelInvertedInterface->SetTitleAndTooltip( "Inverted (CAN High)", "Use this option when recording CAN High directly" );
 	mCanChannelInvertedInterface->SetValue( mInverted );
 
+	mIsFRCInterface.reset(new AnalyzerSettingInterfaceBool());
+	mIsFRCInterface->SetTitleAndTooltip("Use FRC Decoding", "Use this option to enable decoding FRC specific can frames");
+	mIsFRCInterface->SetValue(mIsFRC);
+
 
 	AddInterface( mCanChannelInterface.get() );
 	AddInterface( mBitRateInterface.get() );
 	AddInterface( mCanChannelInvertedInterface.get() );
+	AddInterface(mIsFRCInterface.get());
 
 	//AddExportOption( 0, "Export as text/csv file", "text (*.txt);;csv (*.csv)" );
 	AddExportOption( 0, "Export as text/csv file" );
@@ -53,6 +59,7 @@ bool CanAnalyzerSettings::SetSettingsFromInterfaces()
 	mCanChannel = can_channel;
 	mBitRate = mBitRateInterface->GetInteger();
 	mInverted = mCanChannelInvertedInterface->GetValue();
+	mIsFRC = mIsFRCInterface->GetValue();
 
 	ClearChannels();
 	AddChannel( mCanChannel, "CAN", true );
@@ -73,6 +80,7 @@ void CanAnalyzerSettings::LoadSettings( const char* settings )
 	text_archive >>  mCanChannel;
 	text_archive >>  mBitRate;
 	text_archive >> mInverted; //SimpleArchive catches exception and returns false if it fails.
+	text_archive >> mIsFRC;
 
 	ClearChannels();
 	AddChannel( mCanChannel, "CAN", true );
@@ -88,6 +96,7 @@ const char* CanAnalyzerSettings::SaveSettings()
 	text_archive <<  mCanChannel;
 	text_archive << mBitRate;
 	text_archive << mInverted; 
+	text_archive << mIsFRC;
 
 
 	return SetReturnString( text_archive.GetString() );
@@ -98,6 +107,7 @@ void CanAnalyzerSettings::UpdateInterfacesFromSettings()
 	mCanChannelInterface->SetChannel( mCanChannel );
 	mBitRateInterface->SetInteger( mBitRate );
 	mCanChannelInvertedInterface->SetValue( mInverted );
+	mIsFRCInterface->SetValue(mIsFRC);
 }
 
 BitState CanAnalyzerSettings::Recessive()

@@ -5,6 +5,40 @@
 #include <iostream>
 #include <sstream>
 
+const char* DeviceTypeLookup[NUM_DEVICE_TYPE + 1] = {
+	"Broadcast",
+	"RobotCtrl",
+	"motorCtrl",
+	"relayCtrl",
+	"gyroSensor",
+	"Accelerometer",
+	"Ultrasonic",
+	"Geartooth",
+	"PDP",
+	"PCM",
+	"Misc",
+	"IOBreakout",
+	"dev_rsvd12","dev_rsvd13","dev_rsvd14","dev_rsvd15",
+	"dev_rsvd16","dev_rsvd17","dev_rsvd18","dev_rsvd19",
+	"dev_rsvd20","dev_rsvd21","dev_rsvd22","dev_rsvd23",
+	"dev_rsvd24","dev_rsvd25","dev_rsvd26","dev_rsvd27",
+	"dev_rsvd28","dev_rsvd29","dev_rsvd30",
+	"FWUpdate",
+	"Invalid"
+};
+
+const char* ManufacturerLookup[NUM_MANUFACTURER + 1] = {
+	"Broadcast",
+	"NI",
+	"TI",
+	"DEKA",
+	"CTRE",
+	"MindSensors", //Don't know  if this is the case?
+	"REV",
+	"Unknown",
+	"Invalid"
+};
+
 #pragma warning(disable: 4800) //warning C4800: 'U64' : forcing value to bool 'true' or 'false' (performance warning)
 
 CanAnalyzerResults::CanAnalyzerResults( CanAnalyzer* analyzer, CanAnalyzerSettings* settings )
@@ -30,36 +64,51 @@ void CanAnalyzerResults::GenerateBubbleText( U64 frame_index, Channel& /*channel
 	case IdentifierFieldEx:
 		{
 			char number_str[128];
-
-			if( frame.mType == IdentifierField )
-				AnalyzerHelpers::GetNumberString( frame.mData1, display_base, 12, number_str, 128 );
-			else
-				AnalyzerHelpers::GetNumberString( frame.mData1, display_base, 32, number_str, 128 );
+			bool isFRCFrame = mSettings->mIsFRC || (frame.mType == IdentifierField);
 
 			std::stringstream ss;
-
 			AddResultString( "Id" );
 
-			ss << "Id: " << number_str;
-			AddResultString( ss.str().c_str() );
-			ss.str("");
 
-            ss << "Identifier: " << number_str;
-			AddResultString( ss.str().c_str() );
-			ss.str("");
-
-			if( frame.HasFlag( REMOTE_FRAME ) == false )
+			if (mSettings->mIsFRC)
 			{
-				if( frame.mType == IdentifierField )
+				U64 CANID = (frame.mData1 & CANID_MASK) >> CANID_SHIFT;
+				AnalyzerHelpers::GetNumberString(CANID, display_base, 12, number_str, 128);
+
+				//Small format is id: CANID
+				ss << "Id: " << number_str;
+				AddResultString(ss.str().c_str());
+				ss.str("");
+
+				DisplayStringFromData(frame.mData1, display_base, number_str, 128);
+				ss << number_str;
+				AddResultString(ss.str().c_str());
+				ss.str("");
+			}
+			else //Revert to normal CAN if IsFRC is not checked
+			{
+				if (frame.mType == IdentifierField)
+					AnalyzerHelpers::GetNumberString(frame.mData1, display_base, 12, number_str, 128);
+				else
+					AnalyzerHelpers::GetNumberString(frame.mData1, display_base, 32, number_str, 128);
+
+				ss << "Id: " << number_str;
+				AddResultString(ss.str().c_str());
+				ss.str("");
+
+				ss << "Identifier: " << number_str;
+				AddResultString(ss.str().c_str());
+				ss.str("");
+
+				if (frame.mType == IdentifierField)
 					ss << "Standard CAN Identifier: " << number_str;
 				else
 					ss << "Extended CAN Identifier: " << number_str;
-			}else
+			}
+
+			if( frame.HasFlag( REMOTE_FRAME ) == true )
 			{
-				if( frame.mType == IdentifierField )
-					ss << "Standard CAN Identifier: " << number_str << " (RTR)";
-				else
-					ss << "Extended CAN Identifier: " << number_str << " (RTR)";
+				ss << " (RTR)";
 			}
 
 			AddResultString( ss.str().c_str() );
@@ -285,31 +334,43 @@ void CanAnalyzerResults::GenerateFrameTabularText( U64 frame_index, DisplayBase 
 	case IdentifierField:
 	case IdentifierFieldEx:
 		{
+			bool isFRCFrame = mSettings->mIsFRC || (frame.mType == IdentifierField);
 			char number_str[128];
 
-			if( frame.mType == IdentifierField )
-				AnalyzerHelpers::GetNumberString( frame.mData1, display_base, 12, number_str, 128 );
-			else
-				AnalyzerHelpers::GetNumberString( frame.mData1, display_base, 32, number_str, 128 );
-
-			std::stringstream ss;
-
-			
-			if( frame.HasFlag( REMOTE_FRAME ) == false )
+			if (isFRCFrame)
 			{
-				if( frame.mType == IdentifierField )
-					ss << "Standard CAN Identifier: " << number_str;
-				else
-					ss << "Extended CAN Identifier: " << number_str;
+				std::stringstream ss;
+				DisplayStringFromData(frame.mData1, display_base, number_str, 128);
+				ss << number_str;
+				AddTabularText(ss.str().c_str());
+				ss.str("");
 			}else
 			{
-				if( frame.mType == IdentifierField )
-					ss << "Standard CAN Identifier: " << number_str << " (RTR)";
+				if (frame.mType == IdentifierField)
+					AnalyzerHelpers::GetNumberString(frame.mData1, display_base, 12, number_str, 128);
 				else
-					ss << "Extended CAN Identifier: " << number_str << " (RTR)";
-			}
+					AnalyzerHelpers::GetNumberString(frame.mData1, display_base, 32, number_str, 128);
 
-			AddTabularText( ss.str().c_str() );
+				std::stringstream ss;
+
+
+				if (frame.HasFlag(REMOTE_FRAME) == false)
+				{
+					if (frame.mType == IdentifierField)
+						ss << "Standard CAN Identifier: " << number_str;
+					else
+						ss << "Extended CAN Identifier: " << number_str;
+				}
+				else
+				{
+					if (frame.mType == IdentifierField)
+						ss << "Standard CAN Identifier: " << number_str << " (RTR)";
+					else
+						ss << "Extended CAN Identifier: " << number_str << " (RTR)";
+				}
+
+				AddTabularText(ss.str().c_str());
+			}
 		}
 		break;
 	case ControlField:
@@ -374,3 +435,51 @@ void CanAnalyzerResults::GenerateTransactionTabularText( U64 /*transaction_id*/,
 	ClearResultStrings();
 	AddResultString( "not supported" );
 }
+
+
+
+void CanAnalyzerResults::DisplayStringFromData(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length)
+{
+	U64 DeviceType = (frame & DEVICE_TYPE_MASK) >> DEVICE_TYPE_SHIFT;
+	U64 Manufacturer = (frame & MANUFACTURER_MASK) >> MANUFACTURER_SHIFT;
+	U64 APIClass = (frame & API_CLASS_MASK) >> API_CLASS_SHIFT;
+	U64 APIIndex = (frame & API_INDEX_MASK) >> API_INDEX_SHIFT;
+	U64 CANID = (frame & CANID_MASK) >> CANID_SHIFT;
+
+	std::stringstream ss;
+
+	if (DeviceType > NUM_DEVICE_TYPE)
+		DeviceType = NUM_DEVICE_TYPE;
+	if (Manufacturer > NUM_MANUFACTURER)
+		Manufacturer = NUM_MANUFACTURER;
+
+	ss.str("");
+	ss << "Dev: " << DeviceTypeLookup[DeviceType] << " M: " << ManufacturerLookup[Manufacturer];
+
+	U32 numChars = 128;
+
+	char tmp[128];
+	AnalyzerHelpers::GetNumberString(APIClass, display_base, 12, tmp, numChars);
+	ss << " Class: " << tmp;
+	AnalyzerHelpers::GetNumberString(APIIndex, display_base, 12, tmp, numChars);
+	ss << " Idx: " << tmp;
+	AnalyzerHelpers::GetNumberString(CANID, display_base, 12, tmp, numChars);
+	ss << " ID: " << tmp;
+
+	strncpy(output, ss.str().c_str(), result_string_max_length-1);
+	output[result_string_max_length - 1] = '\0';
+}
+
+/*
+void CanAnalyzerResults::ParseStringFromData(U64 frame,
+	DisplayBase display_base,
+	char* deviceType,
+	char* manufacturer,
+	char* apiClass,
+	char* apiIndex,
+	char* deviceNumber,
+	U32 result_string_max_length)
+{
+
+}
+*/

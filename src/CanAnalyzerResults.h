@@ -9,6 +9,21 @@ enum CanFrameType { IdentifierField, IdentifierFieldEx, ControlField, DataField,
 //#define FRAMING_ERROR_FLAG ( 1 << 0 )
 //#define PARITY_ERROR_FLAG ( 1 << 1 )
 
+#define DEVICE_TYPE_MASK	0x1F000000
+#define MANUFACTURER_MASK	0x00FF0000
+#define API_CLASS_MASK		0x0000FC00
+#define API_INDEX_MASK		0x000003C0
+#define CANID_MASK			0x0000003F
+
+#define DEVICE_TYPE_SHIFT	0x18
+#define MANUFACTURER_SHIFT	0x10
+#define API_CLASS_SHIFT		0xA
+#define API_INDEX_SHIFT		0x6
+#define CANID_SHIFT			0x0
+
+#define NUM_DEVICE_TYPE 32
+#define NUM_MANUFACTURER 8
+
 class CanAnalyzer;
 class CanAnalyzerSettings;
 
@@ -26,6 +41,17 @@ public:
 	virtual void GenerateTransactionTabularText( U64 transaction_id, DisplayBase display_base );
 
 protected: //functions
+	void DisplayStringFromData(U64 frame, DisplayBase display_base, char* str, U32 result_string_max_length);
+	/*
+	void ParseStringFromData(U64 frame,
+		DisplayBase display_base, 
+		char* deviceType, 
+		char* manufacturer,
+		char* apiClass,
+		char* apiIndex,
+		char* deviceNumber,
+		U32 result_string_max_length);
+	*/
 
 protected:  //vars
 	CanAnalyzerSettings* mSettings;
