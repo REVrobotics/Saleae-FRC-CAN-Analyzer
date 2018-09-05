@@ -340,10 +340,27 @@ void CanAnalyzerResults::GenerateFrameTabularText( U64 frame_index, DisplayBase 
 			if (isFRCFrame)
 			{
 				std::stringstream ss;
-				DisplayStringFromData(frame.mData1, display_base, number_str, 128);
-				ss << number_str;
+
+				GetDeviceTypeString(frame.mData1, number_str, 128);
+				ss << "Device Type: " << number_str;
 				AddTabularText(ss.str().c_str());
-				ss.str("");
+
+				GetManufacturerString(frame.mData1, number_str, 128);
+				ss.str(""); ss << "Manufacturer: " << number_str;
+				AddTabularText(ss.str().c_str());
+
+				GetAPIClassString(frame.mData1,display_base, number_str, 128);
+				ss.str(""); ss << "API Class: " << number_str;
+				AddTabularText(ss.str().c_str());
+
+				GetAPIIndexString(frame.mData1, display_base, number_str, 128);
+				ss.str(""); ss << "API Index: " << number_str;
+				AddTabularText(ss.str().c_str());
+
+				GetCANIDString(frame.mData1, display_base, number_str, 128);
+				ss.str(""); ss << "CANID: " << number_str;
+				AddTabularText(ss.str().c_str());
+				
 			}else
 			{
 				if (frame.mType == IdentifierField)
@@ -436,7 +453,41 @@ void CanAnalyzerResults::GenerateTransactionTabularText( U64 /*transaction_id*/,
 	AddResultString( "not supported" );
 }
 
+void CanAnalyzerResults::GetDeviceTypeString(U64 frame, char* output, U32 result_string_max_length)
+{
+	U64 DeviceType = (frame & DEVICE_TYPE_MASK) >> DEVICE_TYPE_SHIFT;
+	if (DeviceType > NUM_DEVICE_TYPE)
+		DeviceType = NUM_DEVICE_TYPE;
+	strncpy(output, DeviceTypeLookup[DeviceType], result_string_max_length-1);
+	output[result_string_max_length - 1] = '\0';
+}
 
+void CanAnalyzerResults::GetManufacturerString(U64 frame, char* output, U32 result_string_max_length)
+{
+	U64 Manufacturer = (frame & MANUFACTURER_MASK) >> MANUFACTURER_SHIFT;
+	if (Manufacturer > NUM_MANUFACTURER)
+		Manufacturer = NUM_MANUFACTURER;
+	strncpy(output, ManufacturerLookup[Manufacturer], result_string_max_length - 1);
+	output[result_string_max_length - 1] = '\0';
+}
+
+void CanAnalyzerResults::GetAPIClassString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length)
+{
+	U64 APIClass = (frame & API_CLASS_MASK) >> API_CLASS_SHIFT;
+	AnalyzerHelpers::GetNumberString(APIClass, display_base, 12, output, result_string_max_length);
+}
+
+void CanAnalyzerResults::GetAPIIndexString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length)
+{
+	U64 APIIndex = (frame & API_INDEX_MASK) >> API_INDEX_SHIFT;
+	AnalyzerHelpers::GetNumberString(APIIndex, display_base, 12, output, result_string_max_length);
+}
+
+void CanAnalyzerResults::GetCANIDString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length)
+{
+	U64 CANID = (frame & CANID_MASK) >> CANID_SHIFT;
+	AnalyzerHelpers::GetNumberString(CANID, display_base, 12, output, result_string_max_length);
+}
 
 void CanAnalyzerResults::DisplayStringFromData(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length)
 {

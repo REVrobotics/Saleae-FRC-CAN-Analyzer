@@ -52,6 +52,11 @@ protected: //functions
 		char* deviceNumber,
 		U32 result_string_max_length);
 	*/
+	void GetDeviceTypeString(U64 frame, char* output, U32 result_string_max_length);
+	void GetManufacturerString(U64 frame, char* output, U32 result_string_max_length);
+	void GetAPIClassString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length);
+	void GetAPIIndexString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length);
+	void GetCANIDString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length);
 
 protected:  //vars
 	CanAnalyzerSettings* mSettings;
