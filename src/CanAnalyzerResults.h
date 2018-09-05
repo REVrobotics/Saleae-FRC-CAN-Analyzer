@@ -21,6 +21,10 @@ enum CanFrameType { IdentifierField, IdentifierFieldEx, ControlField, DataField,
 #define API_INDEX_SHIFT		0x6
 #define CANID_SHIFT			0x0
 
+#define API_CLASS_BITS		6
+#define API_INDEX_BITS		4
+#define CANID_BITS			6
+
 #define NUM_DEVICE_TYPE 32
 #define NUM_MANUFACTURER 8
 

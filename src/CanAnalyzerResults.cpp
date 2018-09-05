@@ -474,19 +474,19 @@ void CanAnalyzerResults::GetManufacturerString(U64 frame, char* output, U32 resu
 void CanAnalyzerResults::GetAPIClassString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length)
 {
 	U64 APIClass = (frame & API_CLASS_MASK) >> API_CLASS_SHIFT;
-	AnalyzerHelpers::GetNumberString(APIClass, display_base, 12, output, result_string_max_length);
+	AnalyzerHelpers::GetNumberString(APIClass, display_base, API_CLASS_BITS, output, result_string_max_length);
 }
 
 void CanAnalyzerResults::GetAPIIndexString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length)
 {
 	U64 APIIndex = (frame & API_INDEX_MASK) >> API_INDEX_SHIFT;
-	AnalyzerHelpers::GetNumberString(APIIndex, display_base, 12, output, result_string_max_length);
+	AnalyzerHelpers::GetNumberString(APIIndex, display_base, API_INDEX_BITS, output, result_string_max_length);
 }
 
 void CanAnalyzerResults::GetCANIDString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length)
 {
 	U64 CANID = (frame & CANID_MASK) >> CANID_SHIFT;
-	AnalyzerHelpers::GetNumberString(CANID, display_base, 12, output, result_string_max_length);
+	AnalyzerHelpers::GetNumberString(CANID, display_base, CANID_BITS, output, result_string_max_length);
 }
 
 void CanAnalyzerResults::DisplayStringFromData(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length)
@@ -510,11 +510,11 @@ void CanAnalyzerResults::DisplayStringFromData(U64 frame, DisplayBase display_ba
 	U32 numChars = 128;
 
 	char tmp[128];
-	AnalyzerHelpers::GetNumberString(APIClass, display_base, 12, tmp, numChars);
+	AnalyzerHelpers::GetNumberString(APIClass, display_base, API_CLASS_BITS, tmp, numChars);
 	ss << " Class: " << tmp;
-	AnalyzerHelpers::GetNumberString(APIIndex, display_base, 12, tmp, numChars);
+	AnalyzerHelpers::GetNumberString(APIIndex, display_base, API_INDEX_BITS, tmp, numChars);
 	ss << " Idx: " << tmp;
-	AnalyzerHelpers::GetNumberString(CANID, display_base, 12, tmp, numChars);
+	AnalyzerHelpers::GetNumberString(CANID, display_base, CANID_BITS, tmp, numChars);
 	ss << " ID: " << tmp;
 
 	strncpy(output, ss.str().c_str(), result_string_max_length-1);
