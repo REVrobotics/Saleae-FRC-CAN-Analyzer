@@ -193,7 +193,12 @@ void CanAnalyzerResults::GenerateExportFile( const char* file, DisplayBase displ
 	U64 trigger_sample = mAnalyzer->GetTriggerSample();
 	U32 sample_rate = mAnalyzer->GetSampleRate();
 
-	ss << "Time [s],Packet,Type,Identifier,Control,Data,CRC,ACK" << std::endl;
+	if (mSettings->mIsFRC) {
+		ss << "Time [s],Packet,Type,Device Type,Manufacturer,API Class,API Index,CAN ID,Control,Data,CRC,ACK" << std::endl;
+	}
+	else {
+		ss << "Time [s],Packet,Type,Identifier,Control,Data,CRC,ACK" << std::endl;
+	}
 	U64 num_frames = GetNumFrames();
 	U64 num_packets = GetNumPackets();
 	for( U32 i=0; i < num_packets; i++ )
@@ -237,10 +242,33 @@ void CanAnalyzerResults::GenerateExportFile( const char* file, DisplayBase displ
 		frame = GetFrame( frame_id );
 
 		char number_str[128];
+		bool isFRCFrame = mSettings->mIsFRC || (frame.mType == IdentifierField);
 
-		if( frame.mType == IdentifierField )
+		if (isFRCFrame && frame.mType == IdentifierFieldEx) {
+			GetDeviceTypeString(frame.mData1, number_str, 128);
+			ss << "," << number_str;
+
+			GetManufacturerString(frame.mData1,number_str,128);
+			ss << "," << number_str;
+
+			GetAPIClassString(frame.mData1,display_base,number_str,128);
+			ss << "," << number_str;
+
+			GetAPIIndexString(frame.mData1, display_base, number_str, 128);
+			ss << "," << number_str;
+
+			GetCANIDString(frame.mData1, display_base, number_str, 128);
+			ss << "," << number_str;
+
+			++frame_id;
+		}
+		else if( frame.mType == IdentifierField )
 		{
 			AnalyzerHelpers::GetNumberString( frame.mData1, display_base, 12, number_str, 128);
+			//Case of not extended frame with FRC enabled
+			if (mSettings->mIsFRC) {
+				ss << ",,,,";
+			}
 			ss << "," << number_str;
 			++frame_id;
 		}
