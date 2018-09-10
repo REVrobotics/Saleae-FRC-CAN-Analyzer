@@ -26,7 +26,7 @@ enum CanFrameType { IdentifierField, IdentifierFieldEx, ControlField, DataField,
 #define CANID_BITS			6
 
 #define NUM_DEVICE_TYPE 32
-#define NUM_MANUFACTURER 8
+#define NUM_MANUFACTURER 9
 
 class CanAnalyzer;
 class CanAnalyzerSettings;

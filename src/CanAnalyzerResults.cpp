@@ -30,13 +30,14 @@ const char* DeviceTypeLookup[NUM_DEVICE_TYPE + 1] = {
 const char* ManufacturerLookup[NUM_MANUFACTURER + 1] = {
 	"Broadcast",
 	"NI",
-	"TI",
+	"LM",
 	"DEKA",
 	"CTRE",
-	"MindSensors", //Don't know  if this is the case?
 	"REV",
-	"Unknown",
-	"Invalid"
+	"Grapple",
+	"MindSensors",
+	"TeamUse",
+	"Unknown"
 };
 
 #pragma warning(disable: 4800) //warning C4800: 'U64' : forcing value to bool 'true' or 'false' (performance warning)
