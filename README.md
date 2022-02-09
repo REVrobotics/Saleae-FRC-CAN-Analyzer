@@ -1,6 +1,6 @@
-# Saleae Controller Area Network (CAN) Analyzer
+# FRC CAN analyzer for Saleae Logic
 
-Saleae Controller Area Network (CAN) Analyzer
+Upstream source for Saleae's own CAN analyzer project: https://github.com/saleae/can-analyzer
 
 ## Getting Started
 
