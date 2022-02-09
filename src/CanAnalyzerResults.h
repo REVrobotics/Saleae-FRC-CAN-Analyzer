@@ -3,7 +3,16 @@
 
 #include <AnalyzerResults.h>
 
-enum CanFrameType { IdentifierField, IdentifierFieldEx, ControlField, DataField, CrcField, AckField, CanError };
+enum CanFrameType
+{
+    IdentifierField,
+    IdentifierFieldEx,
+    ControlField,
+    DataField,
+    CrcField,
+    AckField,
+    CanError
+};
 #define REMOTE_FRAME ( 1 << 0 )
 
 //#define FRAMING_ERROR_FLAG ( 1 << 0 )
@@ -33,28 +42,28 @@ class CanAnalyzerSettings;
 
 class CanAnalyzerResults : public AnalyzerResults
 {
-public:
-	CanAnalyzerResults( CanAnalyzer* analyzer, CanAnalyzerSettings* settings );
-	virtual ~CanAnalyzerResults();
+  public:
+    CanAnalyzerResults( CanAnalyzer* analyzer, CanAnalyzerSettings* settings );
+    virtual ~CanAnalyzerResults();
 
-	virtual void GenerateBubbleText( U64 frame_index, Channel& channel, DisplayBase display_base );
-	virtual void GenerateExportFile( const char* file, DisplayBase display_base, U32 export_type_user_id );
+    virtual void GenerateBubbleText( U64 frame_index, Channel& channel, DisplayBase display_base );
+    virtual void GenerateExportFile( const char* file, DisplayBase display_base, U32 export_type_user_id );
 
-	virtual void GenerateFrameTabularText(U64 frame_index, DisplayBase display_base );
-	virtual void GeneratePacketTabularText( U64 packet_id, DisplayBase display_base );
-	virtual void GenerateTransactionTabularText( U64 transaction_id, DisplayBase display_base );
+    virtual void GenerateFrameTabularText( U64 frame_index, DisplayBase display_base );
+    virtual void GeneratePacketTabularText( U64 packet_id, DisplayBase display_base );
+    virtual void GenerateTransactionTabularText( U64 transaction_id, DisplayBase display_base );
 
 protected: //functions
-	void DisplayStringFromData(U64 frame, DisplayBase display_base, char* str, U32 result_string_max_length);
-	void GetDeviceTypeString(U64 frame, char* output, U32 result_string_max_length);
-	void GetManufacturerString(U64 frame, char* output, U32 result_string_max_length);
-	void GetAPIClassString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length);
-	void GetAPIIndexString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length);
-	void GetCANIDString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length);
+    void DisplayStringFromData(U64 frame, DisplayBase display_base, char* str, U32 result_string_max_length);
+    void GetDeviceTypeString(U64 frame, char* output, U32 result_string_max_length);
+    void GetManufacturerString(U64 frame, char* output, U32 result_string_max_length);
+    void GetAPIClassString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length);
+    void GetAPIIndexString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length);
+    void GetCANIDString(U64 frame, DisplayBase display_base, char* output, U32 result_string_max_length);
 
 protected:  //vars
 	CanAnalyzerSettings* mSettings;
 	CanAnalyzer* mAnalyzer;
 };
 
-#endif //CAN_ANALYZER_RESULTS
+#endif // CAN_ANALYZER_RESULTS
