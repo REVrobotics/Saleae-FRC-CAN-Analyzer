@@ -1,6 +1,6 @@
 # FRC CAN analyzer for Saleae Logic
 
-Upstream source for Saleae's own CAN analyzer project: https://github.com/saleae/can-analyzer
+Forked from Saleae's own CAN analyzer project: https://github.com/saleae/can-analyzer
 
 ## Getting Started
 
