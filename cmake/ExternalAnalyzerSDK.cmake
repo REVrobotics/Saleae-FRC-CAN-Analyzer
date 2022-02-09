@@ -15,7 +15,7 @@ if(NOT TARGET Saleae::AnalyzerSDK)
     FetchContent_Declare(
         analyzersdk
         GIT_REPOSITORY https://github.com/saleae/AnalyzerSDK.git
-        GIT_TAG        master
+        GIT_TAG        fc2fd81512a0c3d97a516b7f52b8c73fbd404889
         GIT_SHALLOW    True
         GIT_PROGRESS   True
     )
