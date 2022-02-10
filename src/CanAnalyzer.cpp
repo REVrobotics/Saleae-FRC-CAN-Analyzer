@@ -235,7 +235,8 @@ void CanAnalyzer::AnalizeRawFrame()
 
     if( bit1 == mSettings->Dominant() )
     {
-        // 11-bit CAN
+        // 11-bit CAN (cannot be FRC CAN)
+        frame_v2_identifier.AddBoolean( "is_frc", false );
 
         BitState bit2; // since this is 11-bit CAN, we know that bit2 is the r0 bit, which we are going to throw away.
         done = UnstuffRawFrameBit( bit2, last_sample );
@@ -267,7 +268,9 @@ void CanAnalyzer::AnalizeRawFrame()
     }
     else
     {
-        // 29-bit CAN
+        // 29-bit CAN (interpret as FRC CAN if FRC CAN decoding is enabled)
+        bool interpretAsFrc = mSettings->mIsFRC;
+        frame_v2_identifier.AddBoolean( "is_frc", interpretAsFrc);
 
         mStandardCan = false;
 
@@ -318,6 +321,26 @@ void CanAnalyzer::AnalizeRawFrame()
         {
             mRemoteFrame = false;
             frame.mFlags = 0;
+        }
+
+        if ( interpretAsFrc )
+        {
+            U64 deviceType = (mIdentifier & DEVICE_TYPE_MASK) >> DEVICE_TYPE_SHIFT;
+            U64 manufacturer = (mIdentifier & MANUFACTURER_MASK) >> MANUFACTURER_SHIFT;
+            U64 apiClass = (mIdentifier & API_CLASS_MASK) >> API_CLASS_SHIFT;
+            U64 apiIndex = (mIdentifier & API_INDEX_MASK) >> API_INDEX_SHIFT;
+            U64 canId = (mIdentifier & CANID_MASK) >> CANID_SHIFT;
+
+            if (deviceType > NUM_DEVICE_TYPE)
+                deviceType = NUM_DEVICE_TYPE;
+            if (manufacturer > NUM_MANUFACTURER)
+                manufacturer = NUM_MANUFACTURER;
+
+            frame_v2_identifier.AddString( "device_type", DeviceTypeLookup[deviceType] );
+            frame_v2_identifier.AddString( "manufacturer", ManufacturerLookup[manufacturer] );
+            frame_v2_identifier.AddInteger( "api_class", apiClass );
+            frame_v2_identifier.AddInteger( "api_index", apiIndex );
+            frame_v2_identifier.AddInteger( "can_id", canId );
         }
 
         frame.mData1 = mIdentifier;
