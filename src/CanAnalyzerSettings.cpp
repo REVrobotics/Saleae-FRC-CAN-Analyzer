@@ -4,7 +4,7 @@
 #include <sstream>
 #include <cstring>
 
-CanAnalyzerSettings::CanAnalyzerSettings() : mCanChannel( UNDEFINED_CHANNEL ), mBitRate( 1000000 ), mInverted( false ), mIsFRC( false )
+CanAnalyzerSettings::CanAnalyzerSettings() : mCanChannel( UNDEFINED_CHANNEL ), mBitRate( 1000000 ), mInverted( false ), mIsFRC( true )
 {
     mCanChannelInterface.reset( new AnalyzerSettingInterfaceChannel() );
     mCanChannelInterface->SetTitleAndTooltip( "CAN", "Controller Area Network - Input" );
