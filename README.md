@@ -2,7 +2,10 @@
 
 Forked from Saleae's own CAN analyzer project: https://github.com/saleae/can-analyzer
 
-## Getting Started
+## Usage
+Download the latest release from the [Releases](https://github.com/REVrobotics/Saleae-FRC-CAN-Analyzer/releases) page, and follow [Saleae's instructions for importing a custom low-level analyzer](https://support.saleae.com/faq/technical-faq/setting-up-developer-directory).
+
+## Getting Started with Development
 
 ### MacOS
 
