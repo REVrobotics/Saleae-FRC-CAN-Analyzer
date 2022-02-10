@@ -89,40 +89,45 @@ Then, open the newly created solution file located here: `build\can_analyzer.sln
   
 ### Frame Type: `"identifier_field"`
 
-| Property | Type | Description |
-| :--- | :--- | :--- |
-| `identifier` | int | Identifier, either 11 bit or 29 bit |
-| `extended` | bool | (optional) Indicates that this identifier is a 29 bit extended identifier. This key is not present on regular 11 bit identifiers |
-| `remote_frame` | bool | (optional) Present and true for remote frames |
+| Property       | Type   | Description                                                                                                                      |
+|:---------------|:-------|:---------------------------------------------------------------------------------------------------------------------------------|
+| `identifier`   | int    | Identifier, either 11 bit or 29 bit                                                                                              |
+| `extended`     | bool   | (optional) Indicates that this identifier is a 29 bit extended identifier. This key is not present on regular 11 bit identifiers |
+| `remote_frame` | bool   | (optional) Present and true for remote frames                                                                                    |
+| `device_type`  | string | (optional) The FRC device type (only present for FRC frames)                                                                     |
+| `manufacturer` | string | (optional) The FRC device manufacturer (only present for FRC frames)                                                             |
+| `api_class`    | int    | (optional) The FRC API class (only present for FRC frames)                                                                       |
+| `api_index`    | int    | (optional) The FRC API index (only present for FRC frames)                                                                       |
+| `can_id`       | int    | (optional) The FRC CAN ID (only present for FRC frames)                                                                          |
 
 ### Frame Type: `"control_field"`
 
-| Property | Type | Description |
-| :--- | :--- | :--- |
-| `num_data_bytes` | int | Number of data bytes in the transaction |
+| Property         | Type | Description                             |
+|:-----------------|:-----|:----------------------------------------|
+| `num_data_bytes` | int  | Number of data bytes in the transaction |
 
 ### Frame Type: `"data_field"`
 
 | Property | Type | Description |
-| :--- | :--- | :--- |
-| `data` | int | The byte |
+|:---------|:-----|:------------|
+| `data`   | int  | The byte    |
 
 ### Frame Type: `"crc_field"`
 
-| Property | Type | Description |
-| :--- | :--- | :--- |
-| `crc` | int | 16 bit CRC value |
+| Property | Type | Description      |
+|:---------|:-----|:-----------------|
+| `crc`    | int  | 16 bit CRC value |
 
 ### Frame Type: `"ack_field"`
 
-| Property | Type | Description |
-| :--- | :--- | :--- |
-| `ack` | bool | True when an ACK was present |
+| Property | Type | Description                  |
+|:---------|:-----|:-----------------------------|
+| `ack`    | bool | True when an ACK was present |
 
 ### Frame Type: `"can_error"`
 
 | Property | Type | Description |
-| :--- | :--- | :--- |
+|:---------|:-----|:------------|
 
 
 Invalid CAN data was encountered

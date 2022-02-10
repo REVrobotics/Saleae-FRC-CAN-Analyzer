@@ -37,6 +37,9 @@ enum CanFrameType
 #define NUM_DEVICE_TYPE 32
 #define NUM_MANUFACTURER 9
 
+extern const char* DeviceTypeLookup[NUM_DEVICE_TYPE + 1];
+extern const char* ManufacturerLookup[NUM_MANUFACTURER + 1];
+
 class CanAnalyzer;
 class CanAnalyzerSettings;
 

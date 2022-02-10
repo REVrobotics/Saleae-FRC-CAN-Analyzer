@@ -4,7 +4,7 @@
 #include <sstream>
 #include <cstring>
 
-CanAnalyzerSettings::CanAnalyzerSettings() : mCanChannel( UNDEFINED_CHANNEL ), mBitRate( 1000000 ), mInverted( false ), mIsFRC( false )
+CanAnalyzerSettings::CanAnalyzerSettings() : mCanChannel( UNDEFINED_CHANNEL ), mBitRate( 1000000 ), mInverted( false ), mIsFRC( true )
 {
     mCanChannelInterface.reset( new AnalyzerSettingInterfaceChannel() );
     mCanChannelInterface->SetTitleAndTooltip( "CAN", "Controller Area Network - Input" );
@@ -21,9 +21,10 @@ CanAnalyzerSettings::CanAnalyzerSettings() : mCanChannel( UNDEFINED_CHANNEL ), m
     mCanChannelInvertedInterface->SetCheckBoxText( "Inverted (CAN High)" );
     mCanChannelInvertedInterface->SetValue( mInverted );
 
-    mIsFRCInterface.reset(new AnalyzerSettingInterfaceBool());
-    mIsFRCInterface->SetTitleAndTooltip("Use FRC Decoding", "Use this option to enable decoding FRC specific can frames");
-    mIsFRCInterface->SetValue(mIsFRC);
+    mIsFRCInterface.reset( new AnalyzerSettingInterfaceBool() );
+    mIsFRCInterface->SetTitleAndTooltip( "", "Use this option to enable decoding FRC specific can frames" );
+    mIsFRCInterface->SetCheckBoxText( "Use FRC Decoding" );
+    mIsFRCInterface->SetValue( mIsFRC );
 
 
     AddInterface( mCanChannelInterface.get() );
